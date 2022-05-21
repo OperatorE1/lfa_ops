@@ -1,0 +1,20 @@
+* When you connect to the challenge and put the tix in a backend server (prob a docker container) will be spun up.
+* After some time you will be given an ip:port to put in your browser
+
+  Ticket please:
+  ticket{oscar853546tango3:GCuopL0yo1gMlbR5Gx2kT_4icyiaSPkw5OxS07Aq88lYcz7pRfECl9PVGPD1VrLlFw}
+
+  Please wait 60 seconds for the challenge to come online. Sorry for the wait.
+  Challenge starting....please wait
+  Wait 10 sec for services to start completely
+
+  Connect to 44.193.4.206:31638 in your browser.
+  groundstation  | Use the API to start the mission!
+  groundstation  |  * Serving Flask app 'webhook' (lazy loading)
+  groundstation  |  * Environment: production
+  groundstation  |    WARNING: This is a development server. Do not use it in a production deployment.
+  groundstation  |    Use a production WSGI server instead.
+  groundstation  |  * Debug mode: off
+
+* you can connect with just a web browser or use an API to connect programatically (see solve.py)
+
