@@ -1,0 +1,21 @@
+Ticket please:
+ticket{tango701395tango3:GHuA-18OzFSiz4ErM2bjHqI44OtbOj9d_jbK8B6fKnTAuBvuw1lq9MKmbofzNkdTqA}
+Orbital Elements:
+Given the following orbit elements:
+semi-major axis: 63780.0 km
+eccentricity: 0.3
+inclination: 63.0 deg
+RAAN: 25.0 deg
+Mean anomaly: 10.0 deg
+Argument of periapsis: 78.0 deg
+Time: 2022-01-01T00:00:00.000
+Find the state vector of the statellite
+Position: X,Y,Z
+3,6,7
+Velocity: Vx,Vy,Vz
+34,67,334
+dP: 45225.14658459609 dV: 343.10162249838476
+Position incorrect
+Velocity incorrect
+Wrong
+....Later
