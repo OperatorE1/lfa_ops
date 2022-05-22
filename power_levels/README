@@ -1,0 +1,9 @@
+1) Make
+    make
+
+2) DOwnload the samples to index.html
+    wget IP:PORT
+    (Do this until the transfer rate goes to --/--, then Ctrl-C)
+
+3) run
+    ./a.out
