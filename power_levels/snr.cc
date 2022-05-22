@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <limits>
+#include <set>
 
 extern "C" {
 #include <fftw3.h>
@@ -49,15 +50,21 @@ void freq_est (std::vector< std::pair< double, double > >& vals, double freq) {
     tgt_freq = max_i * freq / ivals.size ();
 
     double signal = 0.0;
+    double signal_all = 0.0;
     double noise = 0.0;
     double noise_all = 0.0;
 
+//#define USE_THRESH
 #ifdef USE_THRESH
+    printf ("METHOD: Noise Threshold\n");
     for ( i = 0; i < nc; i++ )
     {
         double magnitude = sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1]);
         if (magnitude > thresh) {
-            signal += magnitude * magnitude;
+            if (i < nc / 2) {
+                signal += magnitude * magnitude;
+            }
+            signal_all += magnitude * magnitude;
         } else {
             if (i < nc / 2) {
                 noise += magnitude * magnitude;
@@ -66,12 +73,17 @@ void freq_est (std::vector< std::pair< double, double > >& vals, double freq) {
         }
     }
 #endif
+//#define USE_MAX
 #ifdef USE_MAX
+    printf ("METHOD: Dominant frequency\n");
     for ( i = 0; i < nc; i++ )
     {
         double magnitude = sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1]);
         if (i == max_i) {
-            signal += magnitude * magnitude;
+            if (i < nc / 2) {
+                signal += magnitude * magnitude;
+            }
+            signal_all += magnitude * magnitude;
         } else {
             if (i < nc / 2) {
                 noise += magnitude * magnitude;
@@ -80,8 +92,9 @@ void freq_est (std::vector< std::pair< double, double > >& vals, double freq) {
         }
     }
 #endif
-#define USE_HARMONICS
+//#define USE_HARMONICS
 #ifdef USE_HARMONICS
+    printf ("METHOD: Harmonics\n");
     for ( i = 0; i < nc; i++ )
     {
         double magnitude = sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1]);
@@ -89,8 +102,45 @@ void freq_est (std::vector< std::pair< double, double > >& vals, double freq) {
         uint32_t rem = static_cast< uint32_t >(i_freq) % static_cast< uint32_t >(tgt_freq);
         /* Add any harmonic as signal */
         if (i > 0 && 0 == rem) {
-            //printf ("Harmonic: %0.4f\n", i_freq);
-            signal += magnitude * magnitude;
+            if (i < nc / 2) {
+                signal += magnitude * magnitude;
+            }
+            signal_all += magnitude * magnitude;
+        } else {
+            if (i < nc / 2) {
+                noise += magnitude * magnitude;
+            }
+            noise_all += magnitude * magnitude;
+        }
+    }
+#endif
+#define USE_HARMONIC_BOUNDS
+#ifdef USE_HARMONIC_BOUNDS
+    printf ("METHOD: Harmonics w/ bounds \n");
+    std::set< int > signal_idx;
+    int width = 0, bin_width = 10;
+    for ( i = 0; i < nc; i++ )
+    {
+        double i_freq = i * freq / ivals.size ();
+        uint32_t rem = static_cast< uint32_t >(i_freq) % static_cast< uint32_t >(tgt_freq);
+        /* Add any harmonic and surrounding frequencies as signal */
+        if (i > 0 && 0 == rem) {
+            signal_idx.insert (i);
+            /* Add indicies close to the harmonics as well as the exact */
+            for (int j = 1; j <= bin_width; ++j) {
+                signal_idx.insert (i - j);
+                signal_idx.insert (i + j);
+            }
+        }
+    }
+
+    for (i = 0; i < nc; ++i ) {
+        double magnitude = sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1]);
+        if (signal_idx.find (i) != signal_idx.end ()) {
+            if (i < nc / 2) {
+                signal += magnitude * magnitude;
+            }
+            signal_all += magnitude * magnitude;
         } else {
             if (i < nc / 2) {
                 noise += magnitude * magnitude;
@@ -105,9 +155,9 @@ void freq_est (std::vector< std::pair< double, double > >& vals, double freq) {
 
 
     double snr = 10 * log10 (signal / noise);
-    double snr_all = 10 * log10 (signal / noise_all);
+    double snr_all = 10 * log10 (signal_all / noise_all);
 
-    printf ("freq:%0.4f snr:%0.4f snra:%0.4f\n", tgt_freq, snr, snr_all);
+    printf ("freq:%0.4f snr_half:%0.4f snr_all:%0.4f\n", tgt_freq, snr, snr_all);
 }
 
 template< typename T >
