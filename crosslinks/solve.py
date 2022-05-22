@@ -13,21 +13,35 @@ if __name__ == "__main__":
             #print (out)
             tn.write(b"ticket{bravo684427romeo3:GEDCwFDqDnvyG2MYS2zQ5mN8UOuJtFo-NiWDKikuX17Clx5I2TULa2-QqG6i8hjTjw}\n")
 
-            
-            out = tn.read_until(b"am I:")
 
             #observation 1
+            out = tn.read_until(b"am I:")
             satNum1 = "SATELLITE 155"
-            print ("observation 1 - %s" % satNum1)
             tn.write(satNum1.encode('ascii') + b"\n")
 
 
+            #observation 2
             out = tn.read_until(b"am I:")
-            satNum = "%s"%n
+            satNum1 = "SATELLITE 115"
+            tn.write(satNum1.encode('ascii') + b"\n")
+
+
+            #observation 3
+            out = tn.read_until(b"am I:")
+            satNum1 = "SATELLITE 148"
+            tn.write(satNum1.encode('ascii') + b"\n")
+
+
+            
+            #try new one... 
+            out = tn.read_until(b"am I:")
+            satNum = "SATELLITE %s"%n
             tn.write(satNum.encode('ascii') + b"\n")
+
 
             #print (out) 
 
             out = tn.read_all()
             print (out.decode('ascii'))
 
+        
