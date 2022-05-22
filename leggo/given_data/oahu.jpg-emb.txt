@@ -1,0 +1,1 @@
+Use the command mnemonic that outputs moon.png
