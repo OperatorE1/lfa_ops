@@ -6,7 +6,8 @@ from telnetlib import Telnet
 
 if __name__ == "__main__":
 
-    for n in range(101,180):
+    for n in range(100,181):
+
         with Telnet( "crosslinks.satellitesabove.me", 5300 ) as tn:
             out = tn.read_until(b"please:\n")
             #print (out)
