@@ -32,6 +32,19 @@ if __name__ == "__main__":
             tn.write(satNum1.encode('ascii') + b"\n")
 
 
+
+            #observation 3
+            out = tn.read_until(b"am I:")
+            satNum1 = "SATELLITE 139"
+            tn.write(satNum1.encode('ascii') + b"\n")
+
+
+
+            #observation 4
+            out = tn.read_until(b"am I:")
+            satNum1 = "SATELLITE 169"
+            tn.write(satNum1.encode('ascii') + b"\n")
+
             
             #try new one... 
             out = tn.read_until(b"am I:")
